@@ -104,6 +104,7 @@ main {
     border-radius: 7px;
     font-size: 18px;
     margin-bottom: 20px;
+    cursor: pointer;
 }
 
 /* CABEÇALHO INFO MÚSICAS */
@@ -127,9 +128,11 @@ main {
 	display: flex;
 	padding: 8px 56px;
     border-bottom: 1px solid #646464;
+
 }
 .listaMusicas > li > p {
 	width: 25%;
+	cursor: pointer;
 }
 .listaMusicas > li > .primeiroItem{
 	width: 60%;

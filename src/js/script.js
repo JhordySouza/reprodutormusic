@@ -34,19 +34,59 @@ if(minhaIdade >= 18){
 } 
 
 /*----------------------------------------*/
+const baseMusicas = [
+    {
+        'name': 'Anonymous Choir - Unus Ex Discipulis Meis',
+        'artist': 'Anonymous',
+        'path': './src/audio/Anonymous_Choir_-_Unus_Ex_Discipulis_Meis.mp3',
+        'album': '1 Good Enough',
+    },
+    {
+        'name': 'Felipe Sarro - C Schumann Scherzo in C minor Op 14',
+        'artist': 'Anonymous',
+        'path': './src/audio/Felipe_Sarro_-_11_-_C_Schumann_Scherzo_in_C_minor_Op_14.mp3',
+        'album': '2 Good Enough',
+    },
+    {
+        'name': 'James Scott - Frog Legs Rag 1906 piano roll',
+        'artist': 'Anonymous',
+        'path': './src/audio/James_Scott_-_01_-_Frog_Legs_Rag_1906_piano_roll.mp3',
+        'album': '3 Good Enough',
+    },
+    {
+        'name': 'Onze e Pouquinho',
+        'artist': 'Dilsinho',
+        'path': './src/audio/Dilsinho - Onze e Pouquinho.mp3',
+        'album': 'As melhores de 2019',
+    }
+];
+console.log(baseMusicas);
+
 const listaMusicas = document.querySelector('.listaMusicas');
 
+const tagAudio = document.getElementById('saidaAudio');
+const primeiraMusica = baseMusicas[0];
+tagAudio.src = primeiraMusica.path;
 
-function construirPlayList(){
+const botaoPausar = document.getElementById('btnPause');
+const botaoPlay = document.getElementById('btnControlPlay');
+
+let musicaAtual = 0;
+
+function construirPlayList(musica, musicaId){
     const musicaElemento = document.createElement('li');
     const nomeMusica = document.createElement('p');
     const nomeArtista = document.createElement('p');
     const nomeAlbum = document.createElement('p');
 
+    musicaElemento.dataset.id = musicaId;
+
     nomeMusica.className = 'primeiroItem';
-    nomeMusica.innerText = 'Good Enough';
-    nomeArtista.innerText = 'MeiaUm';
-    nomeAlbum.innerText = 'Good Enough';
+    nomeMusica.innerText = musica.name;
+    nomeArtista.innerText = musica.artist;
+    nomeAlbum.innerText = musica.album;
+
+    musicaElemento.addEventListener('click', tocarMusica)
 
     musicaElemento.appendChild(nomeMusica);
     musicaElemento.appendChild(nomeArtista);
@@ -54,4 +94,71 @@ function construirPlayList(){
 
     listaMusicas.appendChild(musicaElemento);
 }
-construirPlayList();
+
+for(let i = 0; i < baseMusicas.length; i++){
+//console.log(baseMusicas[i]);
+construirPlayList(baseMusicas[i], i)
+}
+
+function tocarMusica(evento){
+    const elementoClicado = evento.currentTarget;
+
+    if (elementoClicado.tagName === 'LI') {
+        const musicaId = elementoClicado.dataset.id;
+        const musicaSelecionada = baseMusicas[musicaId];
+
+        tagAudio.src   = musicaSelecionada.path;
+        musicaAtual = Number(musicaId);
+        tagAudio.play();
+      
+    }else{
+        if (tagAudio.paused){
+            tagAudio.play();
+        } else{
+             tagAudio.pause();
+        }
+    }
+}
+botaoPlay.addEventListener('click', tocarMusica);
+
+function pausarMusica(){
+    tagAudio.pause();
+}
+botaoPausar.addEventListener('click', pausarMusica)
+
+function tocarProximaMusica(){
+    if(musicaAtual === baseMusicas.length -1){
+        musicaAtual = 0
+    }else {
+        musicaAtual++
+    }
+    console.log(musicaAtual);
+    tagAudio.src = baseMusicas[musicaAtual].path
+    tagAudio.play()
+}
+function tocarMusicaAnterior(){
+    if(musicaAtual === 0){
+        musicaAtual = baseMusicas.length -1;
+    }else {
+        musicaAtual--
+    }
+    console.log(musicaAtual);
+    tagAudio.src = baseMusicas[musicaAtual].path
+    tagAudio.play()
+}
+
+//NEXT
+const btnControlnext = document.getElementById('btnControlnext');
+btnControlnext.addEventListener('click', tocarProximaMusica);
+
+//PREV
+const btnControlPrev = document.getElementById('btnControlPrev');
+btnControlPrev.addEventListener('click', tocarMusicaAnterior);
+
+//VOLUME
+const areaPlayerVolume = document.querySelector('.areaPlayerVolume input');
+
+areaPlayerVolume.addEventListener('input', ()=>{
+
+    tagAudio.volume = areaPlayerVolume.value
+})
