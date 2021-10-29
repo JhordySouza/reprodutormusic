@@ -62,11 +62,13 @@ const baseMusicas = [
 ];
 console.log(baseMusicas);
 
-const listaMusicas = document.querySelector('.listaMusicas');
-
+const listaMusicas = document.querySelector('.listaMusicas')
 const tagAudio = document.getElementById('saidaAudio');
 const primeiraMusica = baseMusicas[0];
+
 tagAudio.src = primeiraMusica.path;
+
+atualizaPlay(baseMusicas[0].album, baseMusicas[0].name)
 
 const botaoPausar = document.getElementById('btnPause');
 const botaoPlay = document.getElementById('btnControlPlay');
@@ -110,12 +112,18 @@ function tocarMusica(evento){
         tagAudio.src   = musicaSelecionada.path;
         musicaAtual = Number(musicaId);
         tagAudio.play();
-      
+
+        atualizaPlay(baseMusicas[musicaAtual].album, baseMusicas[musicaAtual].name)
+
+        botaoPlay.classList.add('pause')
+
     }else{
         if (tagAudio.paused){
             tagAudio.play();
+            botaoPlay.classList.add('pause')
         } else{
              tagAudio.pause();
+             botaoPlay.classList.remove('pause')
         }
     }
 }
@@ -123,6 +131,8 @@ botaoPlay.addEventListener('click', tocarMusica);
 
 function pausarMusica(){
     tagAudio.pause();
+    botaoPlay.classList.remove('pause')
+
 }
 botaoPausar.addEventListener('click', pausarMusica)
 
@@ -135,6 +145,12 @@ function tocarProximaMusica(){
     console.log(musicaAtual);
     tagAudio.src = baseMusicas[musicaAtual].path
     tagAudio.play()
+
+    let nomeAlbum = baseMusicas[musicaAtual].album
+    let nomeMusica = baseMusicas[musicaAtual].name
+    atualizaPlay(nomeAlbum, nomeMusica)
+
+    botaoPlay.classList.add('pause')
 }
 function tocarMusicaAnterior(){
     if(musicaAtual === 0){
@@ -145,6 +161,13 @@ function tocarMusicaAnterior(){
     console.log(musicaAtual);
     tagAudio.src = baseMusicas[musicaAtual].path
     tagAudio.play()
+
+    let nomeAlbum = baseMusicas[musicaAtual].album
+    let nomeMusica = baseMusicas[musicaAtual].name
+    atualizaPlay(nomeAlbum, nomeMusica)
+
+    botaoPlay.classList.add('pause')
+
 }
 
 //NEXT
@@ -162,3 +185,22 @@ areaPlayerVolume.addEventListener('input', ()=>{
 
     tagAudio.volume = areaPlayerVolume.value
 })
+//INFO ABUM
+
+function atualizaPlay(nome,musica,foto){
+
+    //const fotoAlbum = document.getElementById('fotoAlbum');
+    const nomeMusica = document.getElementById('nomeMusica');
+    const nomeAlbum = document.getElementById('nomeAlbum');
+
+    //fotoAlbum.src = foto
+    nomeMusica.innerText = musica
+    nomeAlbum.innerText = nome
+}
+
+function qtdMusicas(){
+    let qtdMusicas = document.getElementById('totalMusicas');
+
+    qtdMusicas.innerText = (baseMusicas.length+' songs')
+}
+qtdMusicas()
